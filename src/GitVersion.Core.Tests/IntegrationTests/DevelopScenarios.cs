@@ -566,4 +566,28 @@ public class DevelopScenarios : TestBase
         // ✅ succeeds as expected
         fixture.AssertFullSemver("1.0.0", configurationBuilder.Build());
     }
+
+    /// <summary>
+    /// Prevent decrementation of versions on the develop branch #3177
+    /// (see https://github.com/GitTools/GitVersion/discussions/3177)
+    /// </summary>
+    [Test]
+    public void CheckVersionWhenBuildingOffOfTag()
+    {
+        using EmptyRepositoryFixture fixture = new("develop");
+
+        // Mark this version as RTM
+        fixture.MakeACommit();
+        fixture.MakeACommit();
+        fixture.ApplyTag("2.4.0-beta.22");
+        fixture.MakeACommit();
+        fixture.MakeACommit();
+        fixture.ApplyTag("2.4.0-beta.23");
+        fixture.MakeACommit();
+        fixture.MakeACommit();
+        fixture.ApplyTag("2.4.0-beta.24");
+
+        // ✅ succeeds as expected
+        // fixture.AssertFullSemver("1.0.0", configurationBuilder.Build());
+    }
 }
